@@ -346,9 +346,11 @@ const useUploadedText = () => {
 }
 
 // 加载模板列表
+const baseUrl = import.meta.env.BASE_URL
 const loadTemplateList = async () => {
   try {
-    const res = await fetch('/templates/templates.json')
+    const res = await fetch(`${baseUrl}templates/templates.json`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
     templateList.value = await res.json()
   } catch (e) {
     console.error('加载模板列表失败:', e)
@@ -360,7 +362,8 @@ const loadTemplateList = async () => {
 const selectTemplate = async (template) => {
   loadingTemplate.value = true
   try {
-    const res = await fetch(`/templates/${template.file}`)
+    const res = await fetch(`${baseUrl}templates/${template.file}`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const text = await res.text()
     uploadedText.value = cleanText(text)
     inputText.value = uploadedText.value
